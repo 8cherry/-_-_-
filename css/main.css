@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+:root {
+    --color-green:#8FE5BE;
+    --color-lite-blue:#1CCAFD;
+    --color-fiolet:#BE8FE5;
+    --color-pink:#FB97A3;
+    --color-jellow:#FCB55E;
+    --color-blue:#141625;
+}
+
+
+body{
+    font-family: "Lato", sans-serif;
+    background-color: var(--color-blue);
+    color: var(--color-jellow);
+}
+
+
+h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    padding: 0 20px;
+    box-sizing: content-box;
+    margin: auto;
+}
+
+
+header {
+    margin-bottom: 30px;
+}
+
+.navbar__navigation-li--a{
+    font-family: 'Lato',sans-serif;
+    font-size: 16px;
+    color: var(--color-jellow);
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.navbar__navigation {
+    display: flex;
+    list-style: none;
+    width: 35%;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+
+.navbar__navigation{
+    /* display: inline; */
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar__buttons{
+    display: flex;
+    list-style: none;
+    column-gap: 10px;
+    flex-direction: row;
+}
+
+.card {
+    border: var(--color-fiolet) solid 4px;
+    padding: 12px;
+}
+
+
+.card-yellow {
+    border-color: var(--color-jellow);
+}
+
+.card-green {
+    color: green;
+    border-color: var(--color-green);
+}
+
+.card-blue {
+    border-color: var(--color-lite-blue);
+}
+
+.card-pink {
+    border-color: var(--color-pink);
+}
+
+.color-green {
+    color: var(--color-green);
+} 
+
+.color-fiolet {
+    color: var(--color-fiolet);
+}
+
+.color-yellow  {
+    color: var(--color-jellow);
+}
+.color-blue {
+    color: var(--color-lite-blue);
+} 
+
+
+input, select, button {
+    background: transparent;
+    color: inherit;
+    border: 0;
+    outline: none;
+    border: 1px solid currentColor;
+    padding: 7px 12px;
+}
+
+.hidden {
+    display: none;
+  }
