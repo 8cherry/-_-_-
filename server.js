@@ -1,11 +1,8 @@
-import { Sequelize, DataTypes, Op } from "sequelize";
+import {DataTypes, Sequelize} from "sequelize";
 // import { Sequelize, DataTypes, Model} from '@sequelize/core';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import bodyParser from "body-parser";
-import path from "path";
-import session from 'express-session'
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -18,30 +15,24 @@ const sequelize = new Sequelize({
   }
 });
 
-const User = sequelize.define('User', {
-  // id: {
-  //   type: DataTypes.INTEGER,
-  //   autoIncrement: true,
-  //   primaryKey: true,
-  // },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-},
-  
-{ 
-  timestamps: false, 
-},
+const User = sequelize.define('User',
+    {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    }, {
+      timestamps: false,
+    },
 );
 
 const Transaction = sequelize.define('Transaction', {
@@ -68,9 +59,9 @@ const Transaction = sequelize.define('Transaction', {
     // 1 - дозод
     // 0-  расход
   },},
-  
-  { 
-    timestamps: false, 
+
+  {
+    timestamps: false,
   },
 );
 
@@ -85,8 +76,8 @@ const Category = sequelize.define('Category', {
     allowNull: false,
     unique: true,
   },},
-  { 
-    timestamps: false, 
+  {
+    timestamps: false,
   },
 );
 
@@ -104,8 +95,8 @@ const Account = sequelize.define('Account', {
     type: DataTypes.REAL,
     allowNull: false,
   },},
-  { 
-    timestamps: false, 
+  {
+    timestamps: false,
   },
 );
 
@@ -127,8 +118,8 @@ const Goal = sequelize.define('Goal', {
     type: DataTypes.DATEONLY,
     allowNull: true,
   },},
-  { 
-    timestamps: false, 
+  {
+    timestamps: false,
   },
 );
 
@@ -171,7 +162,7 @@ async function run() {
 function createCategory() {
 
   let list = [
-    'Заработная плата', 
+    'Заработная плата',
     'Хобби',
     'Продажа',
     'Питание',
@@ -204,7 +195,7 @@ const encode = (data) => JSON.stringify(data)
 
 app.get('/accounts', async (request, response) => {
   const transactions =  await Account.findAll();
-  
+
   return response.send(transformDBResponse(transactions));
 });
 
@@ -218,7 +209,7 @@ app.post('/account', async (request, response) => {
 
 app.get('/category', async (request, response) => {
   const transactions =  await Transaction.findAll();
-  
+
   return response.send(transformDBResponse(transactions));
 })
 
@@ -232,7 +223,7 @@ app.post('/category', async (request, response) => {
 
 app.get('/transactions', async (request, response) => {
   const transactions =  await Transaction.findAll();
-  
+
   return response.send(transformDBResponse(transactions));
 })
 
