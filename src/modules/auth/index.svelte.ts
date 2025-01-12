@@ -7,7 +7,7 @@ type TAuth = {};
 let store = $state<null | TAuth>(null);
 
 
-const isAuthorized = $derived(store !== null)
+const isAuthorized = $derived(store === null)
 
 
 const doLogin = async (data: {email: string; password: string}) => {
@@ -37,6 +37,36 @@ const doLogin = async (data: {email: string; password: string}) => {
         });
 };
 
+
+const doRegistrate = async (data: {}) => {
+
+    fetch(backendUrl + "/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then((response) => {
+            if (response.status == 404) {
+                return alert("Пользователь не существует");
+            }
+
+            if (response.status == 400) {
+                return alert("Неверный пароль");
+            }
+
+            return response.json();
+        })
+        .then((json) => {
+            console.log(json)
+            load(json)
+        });
+}
+
+
+
+
 const load = (jwt: string) => {
     console.log(jwt);
 
@@ -58,5 +88,6 @@ export default {
     user: () => user,
     load,
     isAuthorized: () => {return isAuthorized},
-    doLogin
+    doLogin,
+    doRegistrate,
 }

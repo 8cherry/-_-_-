@@ -4,6 +4,9 @@ import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 
+
+const isPull = process.argv.includes('--pull')
+
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "bd.sqlite",
@@ -11,116 +14,116 @@ const sequelize = new Sequelize({
     max: 5,
     min: 0,
     acquire: 30000,
-    idle: 10000
-  }
+    idle: 10000,
+  },
 });
 
 const User = sequelize.define('User',
     {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
     }, {
       timestamps: false,
     },
 );
 
 const Transaction = sequelize.define('Transaction', {
-  // id: {
-  //   type: DataTypes.INTEGER,
-  //   autoIncrement: true,
-  //   primaryKey: true,
-  // },
-  date: {
-    type: DataTypes.DATEONLY,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  amount: {
-    type: DataTypes.REAL,
-    allowNull: false,
-  },
-  type: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    // 1 - дозод
-    // 0-  расход
-  },},
+      // id: {
+      //   type: DataTypes.INTEGER,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      // },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      amount: {
+        type: DataTypes.REAL,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        // 1 - дозод
+        // 0-  расход
+      },},
 
-  {
-    timestamps: false,
-  },
+    {
+      timestamps: false,
+    },
 );
 
 const Category = sequelize.define('Category', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },},
-  {
-    timestamps: false,
-  },
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },},
+    {
+      timestamps: false,
+    },
 );
 
 const Account = sequelize.define('Account', {
-  // id: {
-  //   type: DataTypes.INTEGER,
-  //   autoIncrement: true,
-  //   primaryKey: true,
-  // },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  balance: {
-    type: DataTypes.REAL,
-    allowNull: false,
-  },},
-  {
-    timestamps: false,
-  },
+      // id: {
+      //   type: DataTypes.INTEGER,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      // },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      balance: {
+        type: DataTypes.REAL,
+        allowNull: false,
+      },},
+    {
+      timestamps: false,
+    },
 );
 
 const Goal = sequelize.define('Goal', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  amount: {
-    type: DataTypes.REAL,
-    allowNull: false,
-  },
-  deadline: {
-    type: DataTypes.DATEONLY,
-    allowNull: true,
-  },},
-  {
-    timestamps: false,
-  },
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      amount: {
+        type: DataTypes.REAL,
+        allowNull: false,
+      },
+      deadline: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },},
+    {
+      timestamps: false,
+    },
 );
 
 User.hasMany(Transaction, { foreignKey: 'user_id', onDelete: 'CASCADE' });
@@ -135,49 +138,39 @@ async function run() {
     await sequelize.sync({ force: true });
     console.log("Таблицы пересозданы.");
 
-//     // Создание пользователей
-//     await User.create({ name: "John Doe", age: 30, cash: 100, password: 111 });
-//     await User.create({
-//       name: "Jane Smith",
-//       age: 25,
-//       cash: 200,
-//       password: 112,
-//     });
-//     await User.create({ name: "Oleg", age: 40, cash: 1000, password: 113 });
-//     await User.create({ name: "Natasha", age: 19, cash: 500, password: 114 });
+    // Создание пользователей
+    let list = [
+      'Заработная плата',
+      'Хобби',
+      'Продажа',
+      'Питание',
+      'Транспорт',
+      'Здоровье',
 
+    ]
 
-} catch (error) {
+    for (let name of list)
+      await Category.create({
+        name
+      })
+
+  } catch (error) {
     console.error("Ошибка:", error);
   } finally {
     await sequelize.close();
   }
 }
 
+if (isPull)
+    run()
 
-// run()
 
-
-
-function createCategory() {
-
-  let list = [
-    'Заработная плата',
-    'Хобби',
-    'Продажа',
-    'Питание',
-    'Транспорт',
-    'Здоровье',
-
-  ]
-
-  for (let name of list)
-  Category.create({
-    name
-  })
-}
 
 // createCategory()
+
+
+
+
 const app = express()
 
 app.use(express.static('public'))
@@ -186,6 +179,7 @@ app.use(express.json())
 
 
 const log = console.log;
+
 const transformDBResponse = (data) => {
   return data.map(el => el.dataValues);
 }
@@ -262,7 +256,8 @@ app.post('/login', async (request, response) => {
   if(user.password != password)
       return response.sendStatus(400)
 
-  let token = jwt.sign( { email: email }, "2315", { expiresIn: "30m" } )
+  let token = jwt.sign( { email: email }, "2315", { expiresIn: "30m" } );
+
   response.send( { token } )
 })
 

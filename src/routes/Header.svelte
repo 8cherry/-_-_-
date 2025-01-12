@@ -43,6 +43,19 @@
 		fill: var(--background);
 	}
 
+	.navbar__navigation {
+		position: relative;
+		padding: 0;
+		margin: 0;
+		height: 3em;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		list-style: none;
+		width: 35%;
+		background: var(--background);
+		background-size: contain;
+	}
 	ul {
 		position: relative;
 		padding: 0;

@@ -1,7 +1,4 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-@import '@fontsource/fira-mono';
+
 
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 :root {
@@ -81,6 +78,13 @@ header {
 	border-color: var(--color-jellow);
 }
 
+.color-pink {
+	color: var(--color-pink);
+}
+.card-fiolet {
+	border-color: var(--color-fiolet);
+
+}
 .card-green {
 	color: green;
 	border-color: var(--color-green);
@@ -215,3 +219,9 @@ button:focus:not(:focus-visible) {
 	width: 1px;
 	white-space: nowrap;
 }
+
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import '@fontsource/fira-mono';

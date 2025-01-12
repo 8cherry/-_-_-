@@ -1,14 +1,14 @@
 <script lang="ts">
+	import authStore from '$modules/auth/index.svelte';
+
 	let form = $state(0);
-
-
-	const backendUrl = 'http://localhost:3000'
 
 	const onRegister = (event: SubmitEvent) => {
 		event.preventDefault();
 
 
-		const form = event.target;
+		const form: HTMLFormElement = event.target as HTMLFormElement;
+
 
 		let email = form['email'].value;
 		let name = form['name'].value;
@@ -20,38 +20,14 @@
 			password,
 		};
 
-		fetch(backendUrl + "/register", {
-			method: "POST",
-			body: JSON.stringify(body),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-				.then((response) => {
-					if (response.status == 404) {
-						return alert("Пользователь не существует");
-					}
-
-					if (response.status == 400) {
-						return alert("Неверный пароль");
-					}
-
-					return response.json();
-				})
-				.then((json) => {
-					if (json != undefined || json != null) {
-						localStorage.setItem("token", json.token);
-
-						window.location.href = "/profile.html";
-					}
-				});
+		authStore.doRegistrate(body);
 	}
 
 
 	const onLogin = (event: SubmitEvent) => {
 		event.preventDefault();
 
-		const form = event.target;
+		const form: HTMLFormElement = event.target as HTMLFormElement;
 
 		let email = form['email'].value;
 		let password = form['password'].value;
@@ -60,6 +36,8 @@
 			email,
 			password,
 		};
+
+		authStore.doLogin(body);
 	}
 
 </script>
@@ -89,7 +67,7 @@
 	{:else }
 		<div class="container card form" id="registrationForm">
 			<h2 id="reg">Регистрация</h2>
-			<form id="register-form" action="/register" method="post">
+			<form id="register-form" action="/register" method="post" onsubmit={onRegister}>
 
 				<input type="email" placeholder="Введите ваш E-mail:" id="reg_email" name="email" required>
 				<input type="text" placeholder="Введите ваше имя:" id="reg_name" name="name" required>

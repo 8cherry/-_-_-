@@ -1,4 +1,5 @@
 <script lang="ts">
+	let formTransaction = $state(1);
 
 	type TAccount = {
 		name: string;
@@ -54,26 +55,32 @@
 				Добавление транзакции
 			</h2>
 			<div>
-				<label>
-					<button class="doh">Доход</button>
-					<input type="radio" class="hidden" id="r1" name="type" value='1'>
-				</label>
-				<label>
-					<button class="rash">Расход</button>
-					<input type="radio" name="type" id="r2" value='2' class="hidden">
-				</label>
-			</div>
-			<form action="" method="post" class="dohod-form">
-				<input type="text" placeholder="Введите сумму" name="sum">
-				<select id="select-accounts" name="account"></select>
-				<select id="select-category" name="category">
-					<option value="1">Заработная плата</option>
-					<option value="2">Хобби</option>
-					<option value="3">Продажа</option>
-				</select><br>
-				<button id="vnesenie" type="submit">Внести</button>
-			</form>
+				<button  class={{'btn-active': formTransaction == 1, "doh": true }} onclick={formTransaction = 1}>Доход</button>
+				<button  onclick={formTransaction = 2} class={{'btn-active': formTransaction == 2, "rash": true }} >Расход</button>
 
+				{#if formTransaction == 1}
+					<form action="" method="post" class="dohod-form">
+						<input type="text" placeholder="Введите сумму" name="sum">
+						<select id="select-accounts" name="account"></select>
+						<select id="select-category" name="category">
+							<option value="1">Заработная плата</option>
+							<option value="2">Хобби</option>
+							<option value="3">Продажа</option>
+						</select><br>
+						<button id="vnesenie" type="submit">Пополнить</button>
+					</form>
+				{:else}
+					<form action="" method="post" class="dohod-form">
+						<input type="text" placeholder="Введите сумму" name="sum">
+						<select id="select-accounts" name="account"></select>
+						<select id="select-category" name="category">
+							<option value="1">Заработная плата</option>
+							<option value="2">Хобби</option>
+							<option value="3">Продажа</option>
+						</select><br>
+						<button id="vnesenie" type="submit">Внести</button>
+					</form>
+				{/if}
 		</section>
 		<section class="card card-pink color-yellow transactions">
 			<h2>
@@ -133,7 +140,11 @@
 		flex-direction: row;
 		column-gap: 20px;
 		align-items: self-start;
+	}
 
+	.btn-active {
+		background-color: var(--color-fiolet);
+		color: black;
 	}
 
 	.home__aside {
