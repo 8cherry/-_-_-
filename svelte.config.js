@@ -14,7 +14,9 @@ const config = {
 		adapter: adapter(),
 
 		alias: {
-			'$modules': 'src/modules'
+			'$modules': 'src/modules',
+			'$entities': 'src/entities',
+			'$features': 'src/features'
 		}
 	},
 

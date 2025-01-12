@@ -1,3 +1,16 @@
+<script lang="ts">
+    import TransactionList from "../TransactionList.svelte";
+
+    let history = [
+        {
+            date: '2014-01-01 15:32:12',
+            amount: '1123',
+            category: 'Велосипед',
+
+        }
+    ]
+</script>
+
 <div class="card transaction-history card-yellow container">
     <div class="transaction-history--head">
         <h2 class="transaction-history--head_title">
@@ -13,6 +26,9 @@
             <select name="" id=""></select>
         </div>
 
+    </div>
+    <div>
+        <TransactionList list={history}></TransactionList>
     </div>
 </div>
 

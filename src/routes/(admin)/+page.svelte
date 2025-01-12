@@ -1,4 +1,6 @@
 <script lang="ts">
+	import TransactionList from "./TransactionList.svelte";
+
 	let formTransaction = $state(1);
 
 	type TAccount = {
@@ -16,6 +18,15 @@
 			amount: 0
 		});
 	}
+
+	let history = [
+		{
+			date: '2014-01-01 15:32:12',
+			amount: '1123',
+			category: 'Велосипед',
+
+		}
+	]
 
 
 	const createAccount = () => {
@@ -86,9 +97,7 @@
 			<h2>
 				История транзакций
 			</h2>
-			<div class="transactions--list">
-
-			</div>
+			<TransactionList list={history}></TransactionList>
 
 		</section>
 	</div>

@@ -44,6 +44,7 @@
 	}
 
 	.navbar__navigation {
+		column-gap: 10px;
 		position: relative;
 		padding: 0;
 		margin: 0;
