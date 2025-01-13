@@ -1,14 +1,14 @@
 <script lang="ts">
-    import TransactionList from "../TransactionList.svelte";
+    import TransactionList from "$features/TransacrtionList/TransactionList.svelte";
+    import {getTransactions} from "$entities/transaction";
 
-    let history = [
-        {
-            date: '2014-01-01 15:32:12',
-            amount: '1123',
-            category: 'Велосипед',
+    let history = []
 
-        }
-    ]
+
+    getTransactions().then(res => {
+        history = res;
+    });
+
 </script>
 
 <div class="card transaction-history card-yellow container">

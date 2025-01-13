@@ -1,4 +1,6 @@
 import { PUBLIC_BACKEND_URL as backendUrl} from "$env/static/public";
+import {login} from "$modules/auth/api";
+
 
 
 type TAuth = {};
@@ -11,30 +13,10 @@ const isAuthorized = $derived(store === null)
 
 
 const doLogin = async (data: {email: string; password: string}) => {
-    fetch(backendUrl + "/login", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    }).then((response) => {
-        if (response.status == 404) {
-            return alert("Пользователь не существует");
-        }
 
-        if (response.status == 400) {
-            return alert("Неверный пароль");
-        }
 
-        return response.json();
-    })
-        .then((json) => {
-            if (json != undefined || json != null) {
-                localStorage.setItem("token", json.token);
-
-                window.location.href = "/home.html";
-            }
-        });
+    load('123');
+    // login(data)
 };
 
 
@@ -73,6 +55,8 @@ const load = (jwt: string) => {
     store = {
         user: 123
     };
+
+
 
 
     return true;

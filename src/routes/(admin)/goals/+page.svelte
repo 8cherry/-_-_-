@@ -1,23 +1,49 @@
 <script lang="ts">
+    import DatePicker from "../../../shared/DatePicker.svelte";
+    import {createGoal} from "$entities/goal";
 
+
+    const defaultForm = {
+        startDate: '',
+        endDate: '',
+        name: '',
+        amount: '',
+    };
+
+    let  form = $state(defaultForm);
+
+    const fetchGoals = () => {
+
+    }
+
+    const onSave = (event: SubmitEvent) => {
+        event.preventDefault();
+
+        createGoal(form).then(() => {
+            fetchGoals()
+        })
+    }
 </script>
 
 <div class="card card-pink container mb-2 color-green">
-    <h2>
+    <h2 style="margin-bottom: 20px">
         Добавление цели
     </h2>
-    <div>
-        <input type="text">
-        <select name="" id=""></select>
-    </div>
-    <div>
-        <input type="text">
-        <select name="" id=""></select>
-    </div>
-
-    <button>
-        Добавить цель
-    </button>
+    <form action="" onsubmit={onSave}>
+        <div class="goal-form">
+            <div class="goal-form--row" style="margin-bottom: 10px">
+                <input type="text" placeholder="Название" bind:value={form.name}>
+                <DatePicker bind:value={form.startDate}></DatePicker>
+            </div>
+            <div class="goal-form--row">
+                <input type="text" placeholder="Сумма" bind:value={form.amount}>
+                <DatePicker bind:value={form.endDate}></DatePicker>
+            </div>
+        </div>
+        <button type="submit">
+            Добавить цель
+        </button>
+    </form>
 </div>
 <div class="card goals--block color-fiolet card-yellow container">
     <h2 class="goals--block--title">Все цели</h2>
@@ -51,5 +77,16 @@
 
     .goals--block-view_card {
         max-width: 300px;
+    }
+
+    .goal-form {
+        margin-bottom: 20px;
+    }
+
+    .goal-form--row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
     }
 </style>

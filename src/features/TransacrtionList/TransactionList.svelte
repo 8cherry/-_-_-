@@ -61,17 +61,34 @@
             {dates.date}
         </h3>
         {#each dates.transactions as transaction}
-            <div class='transaction'>
-            <span>
-                Наличные
-            </span>
+            <div class='transactions--list-item'>
                 <span>
-                Премия
-            </span>
-                <span class='color-green'>
-               + ${transaction.amount || 0} ₽
-            </span>
+                    {transaction.account}
+                </span>
+                <span class="transactions--list-item-category">
+                    {transaction.category}
+                </span>
+                <span class={transaction.type == 1 ? 'color-green' : 'color-pink'}>
+                    {#if transaction.type == 1 }
+                        +
+                    {:else}
+                        -
+                    {/if}
+                    {transaction.amount || 0} ₽
+                </span>
             </div>
         {/each}
     {/each}
 </div>
+
+<style>
+    .transactions--list-item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    /*.transactions--list-item-category {*/
+    /*    width: 100%;*/
+    /*    text-align: center;*/
+    /*}*/
+</style>

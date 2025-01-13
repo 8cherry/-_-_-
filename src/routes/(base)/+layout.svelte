@@ -4,7 +4,6 @@
 
 	let {children} = $props();
 
-
 </script>
 
 <div class="wrapper">
@@ -32,6 +31,10 @@
 		min-height: 100vh;
 	}
 
+	.navbar-logo {
+		text-align: center;
+		justify-content: center;
+	}
 	main {
 		flex: 1 1 auto;
 	}

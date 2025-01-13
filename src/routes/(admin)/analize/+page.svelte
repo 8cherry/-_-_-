@@ -1,20 +1,18 @@
 <script lang="ts">
     import Chart from 'chart.js/auto';
     import type {Action} from "svelte/action";
-    import TransactionList from "../TransactionList.svelte";
+    import TransactionList from "$features/TransacrtionList/TransactionList.svelte";
+    import {getTransactions} from "$entities/transaction";
+    import DatePicker from "$shared/DatePicker.svelte";
 
     let formTransaction = $state(1);
 
 
-    let history = [
-        {
-            date: '2014-01-01 15:32:12',
-            amount: '1123',
-            category: 'Велосипед',
+    let history = $state([])
 
-        }
-    ]
-
+    getTransactions().then(res => {
+        history = res;
+    });
 
     const data = [
         { year: 2024, mounth: 5, count: 10000 },
@@ -25,8 +23,8 @@
         { year: 2024, mounth: 10, count: 80000 },
         { year: 2024, mounth: 11, count: 70000 },
     ];
-    const renderChartSource: Action = (node) => {
 
+    const renderChartSource: Action = (node) => {
         new Chart(
             node,
             {
@@ -43,6 +41,7 @@
             }
         );
     }
+
     const renderChartRatio: Action = (node) => {
         new Chart(
             node,
@@ -60,6 +59,7 @@
             }
         );
     }
+
     const renderChart: Action = (node) => {
         new Chart(
             node,
@@ -72,22 +72,19 @@
                             label: 'Доходы',
                             backgroundColor:'#8FE5BE',
                             data: data.map(row => row.count )
-
                         }
                     ]
                 }
             }
         );
     }
-
-
 </script>
 <div class="container">
     <div style="margin-bottom: 2rem">
         <button  class={{'btn-active': formTransaction == 1, "doh": true }} onclick={formTransaction = 1}>Доход</button>
         <button  onclick={formTransaction = 2} class={{'btn-active': formTransaction == 2, "rash": true }} >Расход</button>
+        <DatePicker ></DatePicker>
     </div>
-
     <div class="card card-green color-fiolet ">
         <h3>
             Динамика доходов

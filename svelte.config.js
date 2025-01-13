@@ -16,6 +16,7 @@ const config = {
 		alias: {
 			'$modules': 'src/modules',
 			'$entities': 'src/entities',
+			'$shared': 'src/shared',
 			'$features': 'src/features'
 		}
 	},

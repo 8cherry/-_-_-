@@ -1,5 +1,7 @@
 <script lang="ts">
 	import authStore from '$modules/auth/index.svelte';
+	import {redirect} from "@sveltejs/kit";
+	import {goto} from "$app/navigation";
 
 	let form = $state(0);
 
@@ -38,6 +40,8 @@
 		};
 
 		authStore.doLogin(body);
+
+		goto('/');
 	}
 
 </script>

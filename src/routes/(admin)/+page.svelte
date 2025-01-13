@@ -1,37 +1,52 @@
 <script lang="ts">
-	import TransactionList from "./TransactionList.svelte";
+	import TransactionList from "$features/TransacrtionList/TransactionList.svelte";
+	import {getExpensesCategories, getIncomeCategories, type TCategory} from "$entities/category";
+	import {getAccounts, type TAccount} from "$entities/account";
+	import {getTransactions} from "$entities/transaction";
 
 	let formTransaction = $state(1);
 
-	type TAccount = {
-		name: string;
-		amount: number;
-	};
 
-	const accounts = $state<Array<TAccount>>([]);
+	let accounts = $state<Array<TAccount>>([]);
+
+	getAccounts().then(res => {
+		accounts = res;
+	})
 
 	let newAccounts = $state<Array<TAccount>>([]);
 
 	const addAccount = () => {
 		newAccounts.push({
+			type: 1,
 			name: '',
-			amount: 0
+			amount: '',
 		});
 	}
 
-	let history = [
-		{
-			date: '2014-01-01 15:32:12',
-			amount: '1123',
-			category: 'Велосипед',
+	let history = $state([]);
 
-		}
-	]
+	getTransactions().then(res => {
+		history = res;
+	});
 
 
-	const createAccount = () => {
+	const saveNewAccount = async (index) => {
+		newAccounts = newAccounts.splice(index, 1);
+		//todo save new accounts
 
 	}
+
+	let incomingCategories: Array<TCategory> = $state([])
+	let expenseCategories: Array<TCategory> = $state([])
+
+	getIncomeCategories().then((res) => {
+		incomingCategories = res;
+	})
+
+	getExpensesCategories().then((res) => {
+		expenseCategories = res;
+	})
+
 </script>
 
 <svelte:head>
@@ -47,8 +62,8 @@
                +
             </span>
 		</div>
-		{#each newAccounts as account}
-			<form onsubmit={createAccount()}>
+		{#each newAccounts as account, index}
+			<form onsubmit={() => saveNewAccount(index)}>
 				<input type="text" placeholder="Название" name="name" bind:value={account.name}/>
 				<input type="text" placeholder="Сумма на момент создания" name="amount" bind:value={account.amount}/>
 				<button type="submit" id="dobi">
@@ -58,6 +73,11 @@
 		{/each}
 
 		<ul class="accounts--list">
+			{#each accounts as account}
+				<li value="{account.id}">
+					{account.name}
+				</li>
+			{/each}
 		</ul>
 	</aside>
 	<div class="home__main">
@@ -72,23 +92,35 @@
 				{#if formTransaction == 1}
 					<form action="" method="post" class="dohod-form">
 						<input type="text" placeholder="Введите сумму" name="sum">
-						<select id="select-accounts" name="account"></select>
+						<select id="select-accounts" name="account">
+							{#each accounts as account}
+								<option value="{account.id}">
+									{account.name}
+								</option>
+							{/each}
+						</select>
 						<select id="select-category" name="category">
-							<option value="1">Заработная плата</option>
-							<option value="2">Хобби</option>
-							<option value="3">Продажа</option>
-						</select><br>
+							{#each incomingCategories as category}
+								<option value={category.id}>{category.name}</option>
+							{/each}
+						</select>
 						<button id="vnesenie" type="submit">Пополнить</button>
 					</form>
 				{:else}
 					<form action="" method="post" class="dohod-form">
 						<input type="text" placeholder="Введите сумму" name="sum">
-						<select id="select-accounts" name="account"></select>
+						<select id="select-accounts" name="account">
+							{#each accounts as account}
+								<option value="{account.id}">
+									{account.name}
+								</option>
+							{/each}
+						</select>
 						<select id="select-category" name="category">
-							<option value="1">Заработная плата</option>
-							<option value="2">Хобби</option>
-							<option value="3">Продажа</option>
-						</select><br>
+							{#each expenseCategories as category}
+								<option value={category.id}>{category.name}</option>
+							{/each}
+						</select>
 						<button id="vnesenie" type="submit">Внести</button>
 					</form>
 				{/if}
