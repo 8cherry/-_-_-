@@ -4,6 +4,18 @@
 	import sinein from "$lib/images/signin.png";
 	import userLogo  from "$lib/images/user.png";
 	import NavigationLink from "./NavigationLink.svelte";
+	import authStore from "$modules/auth/index.svelte";
+	import {goto} from "$app/navigation";
+
+
+
+
+	const onLogout = () => {
+		Promise.resolve(authStore.doLogout()).then(() => {
+			goto(`/login`)
+		});
+	}
+
 </script>
 
 <header class="site-header">
@@ -21,7 +33,7 @@
 			<li>
 				<img src={userLogo} width="35" height="35">
 			</li>
-			<li>
+			<li onclick={onLogout}>
 				<img src={sinein} width="35" height="35">
 			</li>
 		</ul>

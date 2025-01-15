@@ -1,142 +1,89 @@
-import {DataTypes, Sequelize} from "sequelize";
-// import { Sequelize, DataTypes, Model} from '@sequelize/core';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import "./db.js";
+import {Category, User, Account, Goal, Transaction, sequelize} from "./db.js";
 
 
 const isPull = process.argv.includes('--pull')
 
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "bd.sqlite",
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-});
 
-const User = sequelize.define('User',
+async function createUserAccounts(user_id) {
+  await Account.create({
+    name,
+    amount: 0,
+    user_id,
+  });
+}
+
+async function createUserCategories(user_id) {
+  // Создание пользователей
+  let type1 = [
+    'Заработная плата',
+    'Хобби',
+    'Продажа',
+    'Питание',
+    'Транспорт',
+    'Здоровье',
+  ]
+
+  let type2 = [
     {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-    }, {
-      timestamps: false,
+      id: 1,
+      name: 'Питание'
     },
-);
-
-const Transaction = sequelize.define('Transaction', {
-      // id: {
-      //   type: DataTypes.INTEGER,
-      //   autoIncrement: true,
-      //   primaryKey: true,
-      // },
-      date: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      amount: {
-        type: DataTypes.REAL,
-        allowNull: false,
-      },
-      type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        // 1 - дозод
-        // 0-  расход
-      },},
-
     {
-      timestamps: false,
+      id: 2,
+      name: 'Транспорт',
     },
-);
-
-const Category = sequelize.define('Category', {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },},
     {
-      timestamps: false,
+      id: 3,
+      name: 'Здоровье',
     },
-);
-
-const Account = sequelize.define('Account', {
-      // id: {
-      //   type: DataTypes.INTEGER,
-      //   autoIncrement: true,
-      //   primaryKey: true,
-      // },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      balance: {
-        type: DataTypes.REAL,
-        allowNull: false,
-      },},
     {
-      timestamps: false,
+      id: 4,
+      name: 'Красота',
     },
-);
-
-const Goal = sequelize.define('Goal', {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      amount: {
-        type: DataTypes.REAL,
-        allowNull: false,
-      },
-      deadline: {
-        type: DataTypes.DATEONLY,
-        allowNull: true,
-      },},
     {
-      timestamps: false,
+      id: 5,
+      name: 'Услуги',
     },
-);
+    {
+      id: 6,
+      name: 'Развлечения',
+    },
+    {
+      id: 7,
+      name: 'Одежда и обувь',
+    },
+    {
+      id: 8,
+      name: 'Образование и развитие',
+    },
+    {
+      id: 8,
+      name: 'Благотворительность и подарки',
+    },
+  ]
 
-User.hasMany(Transaction, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-User.hasMany(Account, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-User.hasMany(Goal, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-Category.hasMany(Transaction, {foreignKey: 'category_id', onDelete: 'CASCADE'});
-Account.hasMany(Transaction, {foreignKey: 'account_id', onDelete: 'CASCADE'});
+  for (let name of type1)
+    await Category.create({
+      name,
+      user_id,
+      type: 1
+    });
 
+  for (let name of type2)
+    await Category.create({
+      name,
+      type: 2,
+      user_id,
+    });
+}
 
-async function run() {
+async function seeds() {
   try {
     await sequelize.sync({ force: true });
-    console.log("Таблицы пересозданы.");
 
     // Создание пользователей
     let list = [
@@ -156,18 +103,13 @@ async function run() {
 
   } catch (error) {
     console.error("Ошибка:", error);
-  } finally {
-    await sequelize.close();
   }
 }
 
+
+
 if (isPull)
-    run()
-
-
-
-// createCategory()
-
+  seeds()
 
 
 
@@ -179,6 +121,7 @@ app.use(express.json())
 
 
 const log = console.log;
+
 
 const transformDBResponse = (data) => {
   return data.map(el => el.dataValues);
@@ -199,7 +142,7 @@ app.post('/account', async (request, response) => {
   let user = await Account.create( {name: name, balance: balance})
 
   return Boolean(user);
-})
+});
 
 app.get('/category', async (request, response) => {
   const transactions =  await Transaction.findAll();
@@ -224,10 +167,6 @@ app.get('/transactions', async (request, response) => {
 app.post('/transactions', async (request, response) => {
   const { sum, account_id, category_id} = request.body;
 
-  // if (account_id) {
-    // let account = Account.findOne(account_id);
-    // account.s
-  // }
 
   let user = await Transaction.create( {date: Date.now(), description: '', account_id, category_id, amount: sum, type: 1} )
 
@@ -239,6 +178,9 @@ app.post('/register', async (request, response) => {
 
   let user = await User.create( {email, name, password } )
 
+  createUserCategories(user_id);
+  createUserAccounts(user_id);
+
   let token = jwt.sign( { email: email }, "2315", { expiresIn: "30m" } )
   response.send( { token } )
 })
@@ -247,7 +189,8 @@ app.post('/register', async (request, response) => {
 app.post('/login', async (request, response) => {
   const { email, password } = request.body
 
-  let user = await User.findOne( {where: {email: email}} )
+  let user = await User.findOne( {where: {email: email}} );
+
   if(user == null)
   {
       return response.sendStatus(404)
@@ -262,5 +205,5 @@ app.post('/login', async (request, response) => {
 })
 
 app.listen(3000, () => {
-  console.log('Негры работают.........')
+  console.log('express started at 3000')
 })

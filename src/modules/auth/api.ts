@@ -8,44 +8,28 @@ let users = [
     }
 ];
 
-const login = async (data: {email: string; password: string}) => {
-    // let user = users.find((user) => {
-    //
-    // })
-    //
-    // if () {
-    //
-    // }else {
-    //
-    // }
-
-    return fetch(backendUrl + "/login", {
+const getAuthToken = async (data: {email: string; password: string}) => {
+    const response = await fetch(backendUrl + "/login", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
             "Content-Type": "application/json",
         },
-    }).then((response) => {
-        if (response.status == 404) {
-            return alert("Пользователь не существует");
-        }
-
-        if (response.status == 400) {
-            return alert("Неверный пароль");
-        }
-
-        return response.json();
     })
-        .then((json) => {
-            if (json != undefined || json != null) {
-                localStorage.setItem("token", json.token);
 
-                window.location.href = "/home.html";
-            }
-        });
+    if (response.status == 404) {
+        return alert("Пользователь не существует");
+    }
+
+    if (response.status == 400) {
+        return alert("Неверный пароль");
+    }
+
+
+    return response.json();
 }
 
 
 export {
-    login
+    getAuthToken
 }

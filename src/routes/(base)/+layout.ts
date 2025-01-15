@@ -6,7 +6,6 @@ export const load = async () => {
     console.log('is auth ', authStore.isAuthorized());
 
     if (authStore.isAuthorized()) {
-        console.log(authStore.isAuthorized())
         throw redirect(301, `/`)
     }
 }

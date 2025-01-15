@@ -2,6 +2,7 @@
 	import authStore from '$modules/auth/index.svelte';
 	import {redirect} from "@sveltejs/kit";
 	import {goto} from "$app/navigation";
+	import {doRegistrate} from "$features/registration";
 
 	let form = $state(0);
 
@@ -10,6 +11,7 @@
 
 
 		const form: HTMLFormElement = event.target as HTMLFormElement;
+
 
 
 		let email = form['email'].value;
@@ -22,7 +24,8 @@
 			password,
 		};
 
-		authStore.doRegistrate(body);
+		console.log(body)
+		doRegistrate(body);
 	}
 
 
@@ -39,9 +42,9 @@
 			password,
 		};
 
-		authStore.doLogin(body);
-
-		goto('/');
+		authStore.doLogin(body).then(() => {
+			goto('/');
+		});
 	}
 
 </script>
@@ -63,7 +66,7 @@
 
 			<button type="submit" id="a">Войти</button>
 			<p>
-				<a href="#" onclick={form = 1}>
+				<a  onclick={form = 1}>
 					Еще не зарегистрированы?
 				</a>
 			</p>
@@ -78,7 +81,9 @@
 				<input type="password" placeholder="Введите ваш пароль:" id="reg_password" name="password" required>
 
 				<button type="submit" id="r">Зарегистрироваться</button>
-				<p><a href="#" onclick={form = 0}>Уже зарегистрированы?</a></p>
+				<p>
+					<a onclick={form = 0}>Уже зарегистрированы?</a>
+				</p>
 			</form>
 		</div>
 	{/if}

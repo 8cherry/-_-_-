@@ -1,77 +1,84 @@
 import { PUBLIC_BACKEND_URL as backendUrl} from "$env/static/public";
-import {login} from "$modules/auth/api";
+import {getAuthToken} from "$modules/auth/api";
+import {setCookie} from "$modules/auth/utils";
 
 
 
-type TAuth = {};
+
+type TAuth = {
+    token: string;
+};
 
 
 let store = $state<null | TAuth>(null);
 
 
-const isAuthorized = $derived(store === null)
+const isAuthorized = (): boolean => store !== null;
+
+
+
+function encode(data: any): string {
+    return JSON.stringify(data)
+}
+
+function decode(data: string) {
+    return JSON.parse(data);
+}
+
+
+const saveState = () => {
+
+
+    setCookie('session', isAuthorized() ? encode( store!.token ) : '', {
+        samesite: 'strict'
+    });
+}
+
+
 
 
 const doLogin = async (data: {email: string; password: string}) => {
+    const token = await getAuthToken(data)
 
 
-    load('123');
-    // login(data)
+    // todo убрать это
+    if (token)
+        load(token.token);
+
+    saveState();
 };
 
 
-const doRegistrate = async (data: {}) => {
+const doLogout = () => {
+    store = null;
 
-    fetch(backendUrl + "/register", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
-        .then((response) => {
-            if (response.status == 404) {
-                return alert("Пользователь не существует");
-            }
-
-            if (response.status == 400) {
-                return alert("Неверный пароль");
-            }
-
-            return response.json();
-        })
-        .then((json) => {
-            console.log(json)
-            load(json)
-        });
+    saveState();
 }
+
 
 
 
 
 const load = (jwt: string) => {
-    console.log(jwt);
-
     store = {
-        user: 123
+        token: jwt,
     };
-
-
-
 
     return true;
 }
 
 const user = $derived(() => {
-    return isAuthorized ? '123' : null;
+    return isAuthorized() ? '123' : null;
 })
 
 
-
+// todo убрать отсюда регистрацию и юзера, заменить логин - на getAuth
 export default {
     user: () => user,
     load,
-    isAuthorized: () => {return isAuthorized},
+    doLogout,
+    isAuthorized: isAuthorized,
     doLogin,
-    doRegistrate,
 }
+
+

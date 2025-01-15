@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TransactionList from "$features/TransacrtionList/TransactionList.svelte";
 	import {getExpensesCategories, getIncomeCategories, type TCategory} from "$entities/category";
-	import {getAccounts, type TAccount} from "$entities/account";
+	import {createAccount, getAccounts, type TAccount} from "$entities/account";
 	import {getTransactions} from "$entities/transaction";
 
 	let formTransaction = $state(1);
@@ -31,9 +31,10 @@
 
 
 	const saveNewAccount = async (index) => {
-		newAccounts = newAccounts.splice(index, 1);
+		let account = newAccounts.splice(index, 1);
 		//todo save new accounts
 
+		createAccount(account);
 	}
 
 	let incomingCategories: Array<TCategory> = $state([])

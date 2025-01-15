@@ -1,5 +1,5 @@
 export type TAccount = {
-    id?: string;
+    id?: string | number;
     type: number;
     name: string;
     amount: number | string;
@@ -14,21 +14,6 @@ export const getAccount = async (id: string) => {
 
 }
 
-export const getAccounts = async () => {
-    return [
-        {
-            id: 1,
-            name: 'Наличные',
-            type: 1,
-        },
-        {
-            id: 2,
-            name: 'Банковская карта',
-            type: 2,
-        },
-        // {
-        //     id: 3,
-        //
-        // },
-    ]
+export const getAccounts = async (): Promise<Array<TAccount>> => {
+
 }

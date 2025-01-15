@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from '../Header.svelte';
 
-	let {children, auth} = $props();
+	let {children} = $props();
 
 </script>
 
